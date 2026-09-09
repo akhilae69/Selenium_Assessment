@@ -1,0 +1,101 @@
+package assessment;
+
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class testcase_01 {
+
+	public static void main(String[] args) throws InterruptedException {
+		WebDriver d = new ChromeDriver();
+		//maximize the window
+		d.manage().window().maximize();
+		//implicit wait
+		d.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		//launch the browser
+		d.get("https://www.facebook.com/");
+		Thread.sleep(2000);
+		//click the create button
+		d.findElement(By.xpath("(//span[@class='x1lliihq x193iq5w x6ikm8r x10wlt62 xlyipyv xuxw1ft'])[3]")).click();
+		Thread.sleep(2000);
+		//locate the WebElements
+		WebElement firstname = d.findElement(By.id("_R_1cl2p4jikacppb6amH1_"));
+		WebElement lastname = d.findElement(By.id("_R_1kl2p4jikacppb6amH1_"));
+		//get x and y coordinates
+		int fnx = firstname.getLocation().getX();
+		System.out.println(fnx);
+		int lnx = lastname.getLocation().getX();
+		System.out.println(lnx);
+		int fny = firstname.getLocation().getY();
+		System.out.println(fny);
+		int lny = lastname.getLocation().getY();
+		System.out.println(lny);
+		//verify
+		if(fny==lny)
+			System.out.println("Are aligned in the same line");
+		else
+			System.out.println("Not aligned in the same line");
+		//close the browser
+		d.quit();
+	}
+}
+
+
+
+package assessment;
+
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class testcase_02 {
+
+	public static void main(String[] args) throws InterruptedException {
+		WebDriver d = new ChromeDriver();
+		//maximize the window
+		d.manage().window().maximize();
+		//implicit wait
+		d.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		
+		//launch the browser
+		d.get("https://www.facebook.com/");
+		Thread.sleep(2000);
+		
+		//get location of the create account button
+		WebElement button = d.findElement(By.xpath("(//span[@class='x1lliihq x193iq5w x6ikm8r x10wlt62 xlyipyv xuxw1ft'])[3]"));
+		System.out.println(button.getLocation());
+		
+		//get dom attribute and dom property before passing value
+		WebElement email = d.findElement(By.id("_R_1h6kqsqppb6amH1_"));
+		System.out.println("Before Dom Attribute:"+email.getDomAttribute("value"));
+		System.out.println("Before Dom Property:"+email.getDomProperty("vlaue"));
+		Thread.sleep(2000);
+		
+		//get dom attribute and dom property after passing value
+		email.sendKeys("Sneha@123");
+		System.out.println("After Dom Attribute:"+email.getDomAttribute("value"));
+		System.out.println("After Dom Property:"+email.getDomProperty("vlaue"));
+		Thread.sleep(2000);
+		
+		//click on create account
+		button.click();
+		
+		//get size of the signup btn
+		WebElement signupbtn = d.findElement(By.linkText("Sign up"));
+		System.out.println(signupbtn.getSize());
+		
+		//get css properties of sign up button
+		System.out.println(signupbtn.getCssValue("color"));
+		System.out.println(signupbtn.getCssValue("font-family"));
+		System.out.println(signupbtn.getCssValue("font-weight"));
+		
+		//close the browser
+		d.quit();
+	}
+}
