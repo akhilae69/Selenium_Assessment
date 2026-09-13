@@ -13,7 +13,7 @@ public class TestCase_1 {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// Load test data from the properties file
-		FileInputStream fis = new FileInputStream("./src/test/resources/DDT/TestCase1.properties");
+		FileInputStream fis = new FileInputStream("./src/test/resources/DDt/TestCase1.properties");
 		Properties p = new Properties();
 		p.load(fis);
 		// Read browser, URL, email, and password from the properties file
@@ -47,12 +47,10 @@ public class TestCase_1 {
 		//close the browser
 		driver.quit();
 	}
-
 }
 
 //code2
 package assessment;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Duration;
@@ -68,11 +66,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class TestCase2 {
+public class TestCase_2 {
 
 	public static void main(String[] args) throws EncryptedDocumentException, IOException, InterruptedException {
 		// Load test data from the Excel file
-		FileInputStream fis = new FileInputStream("./src/test/resources/DDT/TestCase2.xlsx");
+		FileInputStream fis = new FileInputStream("./src/test/resources/DDt/TestCase2.xlsx");
 		Workbook wb = WorkbookFactory.create(fis);
 		
 		// Read browser, URL, username and password from Excel
@@ -120,43 +118,64 @@ import java.time.Duration;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class TestCase3 {
+public class TestCase_3 {
 
-	public static void main(String[] args) throws IOException, ParseException, InterruptedException {
-		// Load test data from the JSON file
-		FileReader fir = new FileReader("./src/test/resources/DDT/TestCase3.json");
-		JSONParser j = new JSONParser();
-		Object obj = j.parse(fir);
-		JSONObject json = (JSONObject)obj;
-		// Read data from JSON file
-		String browser = (json.get("browser").toString());
-		String url = (json.get("url").toString());
-		String name = (json.get("name").toString());
-		String email = (json.get("email").toString());
-		String password = (json.get("password").toString());
-		
-		WebDriver driver = null;
-		// Launch the Chrome browser
-		if(browser.equals("chrome")) {
-			driver = new ChromeDriver();
-		}
-		driver.manage().window().maximize();
-		// Set implicit wait for locating elements
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-		driver.get(url);
-		// Locate the Name field and enter the registration details
-		driver.findElement(By.id("name")).sendKeys(name,Keys.TAB,email,Keys.TAB,password);
-		
-		Thread.sleep(2000);
-		// Locate and click the Register button
-		driver.findElement(By.xpath("//button[text()='Register']")).click();
-		// Close the browser
-		driver.quit();
-	}
+    public static void main(String[] args)
+            throws IOException, ParseException, InterruptedException {
 
+        // Read data from JSON file
+        FileReader fir = new FileReader("./src/test/resources/DDt/TestCase3.json");
+        JSONParser j = new JSONParser();
+        Object obj = j.parse(fir);
+        JSONObject json = (JSONObject) obj;
+        // Read data from JSON
+        String browser = json.get("browser").toString();
+        String url = json.get("url").toString();
+        String name = json.get("name").toString();
+        String email = json.get("email").toString();
+        String password = json.get("password").toString();
+
+        fir.close();
+        WebDriver driver = null;
+        // Launch Chrome browser
+        if (browser.equalsIgnoreCase("chrome")) {
+            driver = new ChromeDriver();
+        }
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        // 1. Navigate to DemoApps QSpiders
+        driver.get(url);
+        // 2. Click UI Testing Concepts
+        driver.findElement(By.xpath("//*[normalize-space()='UI Testing Concepts']")).click();
+        Thread.sleep(2000);
+
+        // 3. Click Text Field
+        driver.findElement(By.xpath("//*[normalize-space()='Text Field']")).click();
+        Thread.sleep(2000);
+        // 4. Enter Name
+        driver.findElement(By.xpath("//input[@placeholder='Enter your name']")).sendKeys(name);
+        // 5. Enter Email
+        driver.findElement(By.xpath("//input[contains(@placeholder,'Email')]")).sendKeys(email);
+        // 6. Enter Password
+        driver.findElement(By.xpath("//input[@type='password']")).sendKeys(password);
+        Thread.sleep(2000);
+        // 7. Click Register
+        driver.findElement(By.xpath("//button[normalize-space()='Register']")).click();
+        Thread.sleep(2000);
+        // 8. Enter Email in Login page
+        driver.findElement(By.xpath("//input[@type='email']")).sendKeys(email);
+        // 9. Enter Password in Login page
+        driver.findElement(By.xpath("//input[@type='password']")).sendKeys(password);
+        // 10. Click Login
+        driver.findElement(By.xpath("//button[normalize-space()='Login']")).click();
+        Thread.sleep(2000);
+        // Close browser
+        driver.quit();
+    }
 }
