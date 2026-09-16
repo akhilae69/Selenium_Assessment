@@ -1,0 +1,473 @@
+//OrangeHRM_Implementation
+package MethodDrivenActions;
+
+import java.awt.AWTException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Properties;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import PomUtilities.OrangeHRM_Candidatespage;
+import PomUtilities.OrangeHRM_HomePage;
+import PomUtilities.OrangeHRM_Loginpage;
+import PomUtilities.OrangeHRM_RecruitmentPage;
+
+public class OrangeHRM_Day8_Assessment {
+
+	public static void main(String[] args)
+			throws IOException, InterruptedException, AWTException {
+
+		// ================= PROPERTY FILE =================
+
+		FileInputStream file = new FileInputStream("./src/test/resources/DDt/common_data.properties");
+
+		Properties p = new Properties();
+		p.load(file);
+
+		String browser = p.getProperty("browser");
+		String url = p.getProperty("url");
+		String un = p.getProperty("username");
+		String pass = p.getProperty("password");
+
+		WebDriver driver = null;
+
+		if (browser.equalsIgnoreCase("chrome")) {
+
+			driver = new ChromeDriver();
+
+		} else {
+
+			file.close();
+			return;
+
+		}
+
+		driver.manage().window().maximize();
+
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+		driver.get(url);
+
+		// ================= LOGIN PAGE =================
+
+		OrangeHRM_Loginpage d =
+				new OrangeHRM_Loginpage(driver);
+
+		d.getUserName(un);
+		d.getPassword(pass);
+		d.getLoginbtn();
+
+		Thread.sleep(3000);
+
+		// ================= HOME PAGE =================
+
+		OrangeHRM_HomePage d1 =
+				new OrangeHRM_HomePage(driver);
+
+		d1.getRecruitmentLink();
+
+		Thread.sleep(3000);
+
+		// ================= EXCEL FILE =================
+
+		FileInputStream fis = new FileInputStream(
+				"./src/test/resources/DDt/OrangeHRMRecruitment.xlsx"
+		);
+
+		Workbook w = WorkbookFactory.create(fis);
+
+		Sheet sh = w.getSheet("sheet1");
+
+		Row row = sh.getRow(1);
+
+		String fn = row.getCell(0).getStringCellValue();
+
+		String ln = row.getCell(2).getStringCellValue();
+
+		String mail = row.getCell(3).getStringCellValue();
+
+		String num = String.valueOf(
+				(long) row.getCell(4).getNumericCellValue()
+		);
+
+		String res = row.getCell(5).getStringCellValue();
+
+		// ================= ADD CANDIDATE =================
+
+		OrangeHRM_RecruitmentPage d2 =new OrangeHRM_RecruitmentPage(driver);
+
+		d2.getAddBtn();
+		Thread.sleep(2000);
+
+		d2.getFN(fn);
+
+		d2.getLN(ln);
+
+		Thread.sleep(1000);
+
+		d2.getVacancy();
+
+		Thread.sleep(2000);
+
+		d2.getEmail(mail);
+
+		Thread.sleep(1000);
+
+		d2.getContact_num(num);
+
+		Thread.sleep(1000);
+
+		d2.getResume(res);
+
+		Thread.sleep(1000);
+
+		d2.getSavebtn();
+
+		Thread.sleep(4000);
+
+		d2.getCandidates_btn();
+
+		Thread.sleep(5000);
+
+		// ================= CANDIDATES PAGE =================
+
+		OrangeHRM_Candidatespage d3 =
+				new OrangeHRM_Candidatespage(driver);
+
+		d3.getJob_title();
+
+		Thread.sleep(2000);
+
+		d3.getVacancy();
+
+		Thread.sleep(2000);
+
+		d3.getHR();
+
+		Thread.sleep(2000);
+
+		d3.getStatus();
+
+		Thread.sleep(2000);
+
+		d3.getC_name(fn);
+
+		Thread.sleep(2000);
+
+		d3.getSearch();
+
+		Thread.sleep(4000);
+
+		// ================= VERIFY =================
+
+		boolean found = driver.findElements(
+				By.xpath(
+						"//div[@role='row']//div[@role='cell' and normalize-space()='"
+								+ fn + " " + ln + "']"
+				)
+		).size() > 0;
+
+		if (found) {
+
+			System.out.println("record found");
+
+		} else {
+			System.out.println("no record found");
+
+		}
+
+		// ================= CLOSE =================
+
+		w.close();
+		fis.close();
+		file.close();
+		driver.quit();
+
+	}
+
+}
+//Loginpage
+package PomUtilities;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class OrangeHRM_Loginpage {
+
+    WebDriver driver;
+
+    public OrangeHRM_Loginpage(WebDriver driver) {
+
+        this.driver = driver;
+
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(name = "username")
+    private WebElement UserName;
+
+    @FindBy(name = "password")
+    private WebElement Password;
+
+    @FindBy(xpath = "//button[@type='submit']")
+    private WebElement Loginbtn;
+
+    public void getUserName(String value) {
+
+        UserName.sendKeys(value);
+    }
+
+    public void getPassword(String value) {
+
+        Password.sendKeys(value);
+    }
+
+    public void getLoginbtn() {
+
+        Loginbtn.click();
+    }
+}
+//Homepage
+package PomUtilities;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class OrangeHRM_HomePage {
+
+    WebDriver driver;
+
+    public OrangeHRM_HomePage(WebDriver driver) {
+
+        this.driver = driver;
+
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(xpath = "//span[text()='Recruitment']")
+    private WebElement RecruitmentLink;
+
+    @FindBy(xpath = "//span[contains(@class,'oxd-userdropdown-tab')]")
+    private WebElement UserDropdown;
+
+    @FindBy(xpath = "//a[text()='Logout']")
+    private WebElement Logout;
+
+    public void getRecruitmentLink() {
+
+        RecruitmentLink.click();
+    }
+
+    public void getUserDropdown() {
+
+        UserDropdown.click();
+    }
+
+    public void getLogout() {
+
+        Logout.click();
+    }
+}
+
+//Candidatespage
+
+package PomUtilities;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class OrangeHRM_Candidatespage {
+
+    WebDriver driver;
+
+    public OrangeHRM_Candidatespage(WebDriver driver) {
+
+        this.driver = driver;
+
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(xpath =
+            "//label[normalize-space()='Job Title']" +
+            "/ancestor::div[contains(@class,'oxd-input-group')]" +
+            "//div[contains(@class,'oxd-select-text')]")
+    private WebElement Job_title;
+
+    @FindBy(xpath =
+            "//label[normalize-space()='Vacancy']" +
+            "/ancestor::div[contains(@class,'oxd-input-group')]" +
+            "//div[contains(@class,'oxd-select-text')]")
+    private WebElement Vacancy;
+
+    @FindBy(xpath =
+            "//label[normalize-space()='Hiring Manager']" +
+            "/ancestor::div[contains(@class,'oxd-input-group')]" +
+            "//div[contains(@class,'oxd-select-text')]")
+    private WebElement HR;
+
+    @FindBy(xpath =
+            "//label[normalize-space()='Status']" +
+            "/ancestor::div[contains(@class,'oxd-input-group')]" +
+            "//div[contains(@class,'oxd-select-text')]")
+    private WebElement Status;
+
+    @FindBy(xpath =
+            "//label[normalize-space()='Candidate Name']" +
+            "/ancestor::div[contains(@class,'oxd-input-group')]" +
+            "//input")
+    private WebElement C_name;
+
+    @FindBy(xpath = "//button[normalize-space()='Search']")
+    private WebElement Search;
+
+    public void getJob_title() {
+
+        Job_title.click();
+    }
+
+    public void getVacancy() {
+
+        Vacancy.click();
+    }
+
+    public void getHR() {
+
+        HR.click();
+    }
+
+    public void getStatus() {
+
+        Status.click();
+    }
+
+    public void getC_name(String value) {
+
+        C_name.sendKeys(value);
+    }
+
+    public void getSearch() {
+
+        Search.click();
+    }
+}
+//RecruitmentPage
+package PomUtilities;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class OrangeHRM_RecruitmentPage {
+
+    WebDriver driver;
+
+    public OrangeHRM_RecruitmentPage(WebDriver driver) {
+
+        this.driver = driver;
+
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(xpath = "//button[normalize-space()='Add']")
+    private WebElement AddBtn;
+
+    @FindBy(name = "firstName")
+    private WebElement FN;
+
+    @FindBy(name = "lastName")
+    private WebElement LN;
+
+    @FindBy(xpath =
+            "//label[normalize-space()='Vacancy']" +
+            "/ancestor::div[contains(@class,'oxd-input-group')]" +
+            "//div[contains(@class,'oxd-select-text')]")
+    private WebElement Vacancy;
+
+    @FindBy(xpath =
+            "//label[normalize-space()='Email']" +
+            "/ancestor::div[contains(@class,'oxd-input-group')]" +
+            "//input")
+    private WebElement Email;
+
+    @FindBy(xpath =
+            "//label[normalize-space()='Contact Number']" +
+            "/ancestor::div[contains(@class,'oxd-input-group')]" +
+            "//input")
+    private WebElement Contact_num;
+
+    @FindBy(xpath = "//input[@type='file']")
+    private WebElement Resume;
+
+    @FindBy(xpath = "//button[normalize-space()='Save']")
+    private WebElement Savebtn;
+
+    @FindBy(xpath = "//a[normalize-space()='Candidates']")
+    private WebElement Candidates_btn;
+
+    public void getAddBtn() {
+
+        AddBtn.click();
+    }
+
+    public void getFN(String value) {
+
+        FN.sendKeys(value);
+    }
+
+    public void getLN(String value) {
+
+        LN.sendKeys(value);
+    }
+
+    public void getVacancy() {
+
+        Vacancy.click();
+
+        WebElement option = driver.findElement(
+                By.xpath("//div[contains(@class,'oxd-select-option')][1]")
+        );
+
+        option.click();
+    }
+
+    public void getEmail(String value) {
+
+        Email.sendKeys(value);
+    }
+
+    public void getContact_num(String value) {
+
+        Contact_num.sendKeys(value);
+    }
+
+    public void getResume(String value) {
+
+        Resume.sendKeys(value);
+    }
+
+    public void getSavebtn() {
+
+        Savebtn.click();
+    }
+
+    public void getCandidates_btn() {
+
+        Candidates_btn.click();
+    }
+}
