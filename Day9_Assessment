@@ -1,0 +1,92 @@
+package KeywordFramework_implementation;
+
+import KeyWordDriven.KeyWordExecutors2;
+import KeyWordDriven.KeyWordExecutors2;
+
+public class SauceDemoKeywords {
+	public static void main(String[] args) {
+		KeyWordExecutors2 e=new KeyWordExecutors2();
+		e.executors("LAUNCH_BROWSER");
+		e.executors("OPEN_URL");
+		e.executors("USER_NAME");
+		e.executors("PASSWORD");
+		e.executors("LOGIN");
+		e.executors("CLOSE_BROWSER");
+
+	}
+
+//Keyword_implementation
+package KeyWordDriven;
+
+import java.time.Duration;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class Keyword_implementation2 {
+	WebDriver driver;
+	public void launchBrowser()
+	{
+		driver=new ChromeDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+	}
+	public void openurl()
+	{
+		driver.get("https://www.saucedemo.com/");
+		
+	}
+	public void username()
+	{
+		driver.findElement(By.id("user-name")).sendKeys("standard_user");
+	}
+	public void password()
+	{
+		driver.findElement(By.id("password")).sendKeys("secret_sauce");
+	}
+	public void login()
+	{
+		driver.findElement(By.id("login-button")).click();
+	}
+	public void closebrowser()
+	{
+		driver.quit();
+	}
+
+}
+//KeyWordExecutors
+package KeyWordDriven;
+
+public class KeyWordExecutors2 {
+	Keyword_implementation2 k = new Keyword_implementation2();
+		public void executors(String keyword)
+		{
+			if(keyword.equals("LAUNCH_BROWSER"))
+			{
+				k.launchBrowser();
+			}
+			else if(keyword.equals("OPEN_URL"))
+			{
+				k.openurl();
+			}
+			else if(keyword.equals("USER_NAME"))
+			{
+				k.username();
+			}
+			else if(keyword.equals("PASSWORD"))
+			{
+				k.password();
+			}
+			else if(keyword.equals("LOGIN"))
+			{
+				k.login();
+			}
+			else
+			{
+				k.closebrowser();
+			}
+		}
+
+	}
+
+}
