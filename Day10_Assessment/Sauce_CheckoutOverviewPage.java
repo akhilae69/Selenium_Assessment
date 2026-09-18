@@ -8,7 +8,6 @@ import org.openqa.selenium.support.PageFactory;
 public class Sauce_CheckoutOverviewPage {
 
 	WebDriver driver;
-
 	public Sauce_CheckoutOverviewPage(WebDriver driver) {
 		this.driver = driver;
 		PageFactory.initElements(driver , this);
