@@ -1,9 +1,14 @@
 package PomUtilities;
 
+import java.time.Duration;
+
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class OrangeHRM_VacanciesPage2 {
 
@@ -17,8 +22,8 @@ public class OrangeHRM_VacanciesPage2 {
     @FindBy(xpath = "(//input[@class='oxd-input oxd-input--active'])[2]")
     private WebElement vacancyName;
 
-    public WebElement getVacancyName() {
-        return vacancyName;
+    public void getVn(String name) {
+        vacancyName.sendKeys(name);
     }
 
     @FindBy(xpath = "//div[@class='oxd-select-text oxd-select-text--active']")
@@ -34,28 +39,52 @@ public class OrangeHRM_VacanciesPage2 {
     public void getJobTittle() {
         jobTittle.click();
     }
- // Locate the Description text area
+
     @FindBy(xpath = "//textarea[@placeholder='Type description here']")
     private WebElement description;
 
     public void getDes(String des) {
         description.sendKeys(des);
     }
- // Locate the HR Manager input field
+
     @FindBy(xpath = "//input[@placeholder='Type for hints...']")
     private WebElement hiringManager;
 
-    public void gethRm(String hrm) {
-        hiringManager.sendKeys(hrm);
+    public void gethRm(String manager) throws InterruptedException {
+
+        String managerName =
+                manager.replaceAll("\\s+", " ").trim();
+
+        hiringManager.clear();
+
+        hiringManager.sendKeys(managerName);
+
+        WebDriverWait wait =
+                new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement option =
+                wait.until(
+                        ExpectedConditions.elementToBeClickable(
+                                By.xpath(
+                                        "//div[contains(@class,'oxd-autocomplete-option')]//*[normalize-space()='"
+                                                + managerName + "']"
+                                )
+                        )
+                );
+
+        option.click();
     }
- // Locate the Number of Positions input field
+
     @FindBy(xpath = "(//div[@class='oxd-input-group oxd-input-field-bottom-space']/descendant::div[@class='oxd-input-group__label-wrapper']/following-sibling::div/input)[2]")
     private WebElement noOfPositions;
 
-    public void getnoofp() {
-        noOfPositions.sendKeys("20");
+    public void getnoofp(String position) {
+
+        noOfPositions.clear();
+
+        noOfPositions.sendKeys(position);
     }
- // Locate the Save button
+
     @FindBy(xpath = "//button[normalize-space()='Save']")
     private WebElement saveButton;
 
