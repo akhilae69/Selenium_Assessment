@@ -8,13 +8,12 @@ import org.openqa.selenium.support.PageFactory;
 public class OrangeHRM_HomePage2 {
 
     WebDriver driver;
-
     public OrangeHRM_HomePage2(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
-    @FindBy(xpath = "//span[text()='Recruitment']")
+    @FindBy(xpath = "//span[normalize-space()='Recruitment']")
     private WebElement recruiterLink;
 
     public void getRecruiterLink() {
