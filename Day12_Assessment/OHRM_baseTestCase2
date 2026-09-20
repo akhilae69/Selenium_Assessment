@@ -1,0 +1,191 @@
+package DataDrivenTesting;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import BaseClassUtility.BaseClass2_OHRM;
+import PomUtilities.OrangeHRM_HomePage2;
+import PomUtilities.OrangeHRM_LoginPage2;
+import PomUtilities.OrangeHRM_LogoutPage2;
+import PomUtilities.OrangeHRM_MyInfoPage;
+import PomUtilities.OrangeHRM_RecruitmentPage2;
+import PomUtilities.OrangeHRM_VacanciesPage2;
+
+public class OHRM_baseTestCase2
+        extends BaseClass2_OHRM {
+
+    @DataProvider
+    public Object[][] JobDetails()
+            throws EncryptedDocumentException, IOException {
+
+        FileInputStream fis =
+                new FileInputStream("./src/test/resources/DDt/OrangeHRM_Recruitment.xlsx");
+
+        Workbook wb =
+                WorkbookFactory.create(fis);
+
+        Sheet sh =wb.getSheet("Sheet1");
+
+        DataFormatter df =new DataFormatter();
+
+        int count = 0;
+
+        for (int i = 1;
+             i <= sh.getLastRowNum();
+             i++) {
+
+            if (sh.getRow(i) != null &&
+                sh.getRow(i).getCell(0) != null &&
+                !df.formatCellValue(
+                        sh.getRow(i).getCell(0))
+                        .trim()
+                        .isEmpty()) {
+
+                count++;
+            }
+        }
+
+        Object[][] data =
+                new Object[count][4];
+
+        int index = 0;
+
+        for (int i = 1;
+             i <= sh.getLastRowNum();
+             i++) {
+
+            if (sh.getRow(i) != null &&
+                sh.getRow(i).getCell(0) != null &&
+                !df.formatCellValue(
+                        sh.getRow(i).getCell(0))
+                        .trim()
+                        .isEmpty()) {
+
+                for (int j = 0; j < 4; j++) {
+
+                    data[index][j] =df.formatCellValue(sh.getRow(i).getCell(j)).trim();
+                }
+
+                index++;
+            }
+        }
+
+        wb.close();
+
+        fis.close();
+
+        return data;
+    }
+
+    @Test(dataProvider = "JobDetails")
+    public void TestCase1(
+            String vacancyName,
+            String description,
+            String hiringManager,
+            String noOfPosition)
+            throws InterruptedException {
+
+        System.out.println(
+                "========== TEST CASE 1 ==========");
+
+        OrangeHRM_HomePage2 home =new OrangeHRM_HomePage2(driver);
+
+        home.getRecruiterLink();
+
+        Thread.sleep(2000);
+
+        OrangeHRM_RecruitmentPage2 recruitment =new OrangeHRM_RecruitmentPage2(driver);
+
+        recruitment.getvacancyLink();
+
+        Thread.sleep(2000);
+
+        recruitment.getAddLink();
+
+        Thread.sleep(2000);
+
+        OrangeHRM_VacanciesPage2 vacancy =new OrangeHRM_VacanciesPage2(driver);
+
+        vacancy.getVn(vacancyName);
+
+        vacancy.getJobTi();
+
+        vacancy.getJobTittle();
+
+        vacancy.getDes(description);
+
+        vacancy.gethRm(hiringManager);
+
+        vacancy.getnoofp(noOfPosition);
+
+        vacancy.getsavebtn();
+
+        Thread.sleep(3000);
+
+        System.out.println(
+                "========== TEST CASE 1 COMPLETED ==========");
+    }
+
+    @Test
+    public void TestCase_2()
+            throws InterruptedException, IOException {
+
+        System.out.println(
+                "========== TEST CASE 2 ==========");
+
+        OrangeHRM_HomePage2 home =new OrangeHRM_HomePage2(driver);
+
+        home.getMyInfoLink();
+
+        Thread.sleep(2000);
+
+        OrangeHRM_MyInfoPage myInfo =new OrangeHRM_MyInfoPage(driver);
+
+        myInfo.getFname("Akhila");
+
+        myInfo.getLname("Reddy");
+
+        myInfo.getempId("3BR008");
+
+        myInfo.getSaveBtn();
+        Thread.sleep(2000);
+
+        OrangeHRM_LogoutPage2 logout =new OrangeHRM_LogoutPage2(driver);
+
+        logout.getdropd();
+        Thread.sleep(1000);
+        logout.getlogout();
+        Thread.sleep(2000);
+
+        OrangeHRM_LoginPage2 login =new OrangeHRM_LoginPage2(driver);
+
+        login.getUn();
+        Thread.sleep(1000);
+        login.getPwd();
+        Thread.sleep(1000);
+        login.getLgbutton();
+        Thread.sleep(3000);
+
+        OrangeHRM_HomePage2 home2 =new OrangeHRM_HomePage2(driver);
+        home2.getMyInfoLink();
+        Thread.sleep(2000);
+
+        OrangeHRM_MyInfoPage myInfo2 =new OrangeHRM_MyInfoPage(driver);
+        String updatedFname =myInfo2.getFname();
+        String updatedLname =myInfo2.getLname();
+        Assert.assertEquals(updatedFname,"Akhila");
+        Assert.assertEquals(updatedLname,"Reddy");
+
+        System.out.println(
+                "========== TEST CASE 2 COMPLETED ==========");
+    }
+}
