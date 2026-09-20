@@ -1,0 +1,30 @@
+package PomUtilities;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class OrangeHRM_HomePage2 {
+
+    WebDriver driver;
+
+    public OrangeHRM_HomePage2(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(xpath = "//span[text()='Recruitment']")
+    private WebElement recruiterLink;
+
+    public void getRecruiterLink() {
+        recruiterLink.click();
+    }
+
+    @FindBy(xpath = "//span[normalize-space()='My Info']")
+    private WebElement myInfoLink;
+
+    public void getMyInfoLink() {
+        myInfoLink.click();
+    }
+}
