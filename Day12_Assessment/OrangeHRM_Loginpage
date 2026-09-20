@@ -1,0 +1,42 @@
+package PomUtilities;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class OrangeHRM_Loginpage {
+
+    WebDriver driver;
+
+    public OrangeHRM_Loginpage(WebDriver driver) {
+
+        this.driver = driver;
+
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(name = "username")
+    private WebElement UserName;
+
+    @FindBy(name = "password")
+    private WebElement Password;
+
+    @FindBy(xpath = "//button[@type='submit']")
+    private WebElement Loginbtn;
+
+    public void getUserName(String value) {
+
+        UserName.sendKeys(value);
+    }
+
+    public void getPassword(String value) {
+
+        Password.sendKeys(value);
+    }
+
+    public void getLoginbtn() {
+
+        Loginbtn.click();
+    }
+}
