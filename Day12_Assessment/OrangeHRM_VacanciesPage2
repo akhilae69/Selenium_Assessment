@@ -1,0 +1,65 @@
+package PomUtilities;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class OrangeHRM_VacanciesPage2 {
+
+    WebDriver driver;
+
+    public OrangeHRM_VacanciesPage2(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(xpath = "(//input[@class='oxd-input oxd-input--active'])[2]")
+    private WebElement vacancyName;
+
+    public WebElement getVacancyName() {
+        return vacancyName;
+    }
+
+    @FindBy(xpath = "//div[@class='oxd-select-text oxd-select-text--active']")
+    private WebElement jobTitle;
+
+    public void getJobTi() {
+        jobTitle.click();
+    }
+
+    @FindBy(xpath = "//span[text()='Software Engineer']")
+    private WebElement jobTittle;
+
+    public void getJobTittle() {
+        jobTittle.click();
+    }
+ // Locate the Description text area
+    @FindBy(xpath = "//textarea[@placeholder='Type description here']")
+    private WebElement description;
+
+    public void getDes(String des) {
+        description.sendKeys(des);
+    }
+ // Locate the HR Manager input field
+    @FindBy(xpath = "//input[@placeholder='Type for hints...']")
+    private WebElement hiringManager;
+
+    public void gethRm(String hrm) {
+        hiringManager.sendKeys(hrm);
+    }
+ // Locate the Number of Positions input field
+    @FindBy(xpath = "(//div[@class='oxd-input-group oxd-input-field-bottom-space']/descendant::div[@class='oxd-input-group__label-wrapper']/following-sibling::div/input)[2]")
+    private WebElement noOfPositions;
+
+    public void getnoofp() {
+        noOfPositions.sendKeys("20");
+    }
+ // Locate the Save button
+    @FindBy(xpath = "//button[normalize-space()='Save']")
+    private WebElement saveButton;
+
+    public void getsavebtn() {
+        saveButton.click();
+    }
+}
