@@ -1,42 +1,65 @@
 package PomUtilities;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class OrangeHRM_Loginpage {
+public class OrangeHRM_LoginPage2 {
 
     WebDriver driver;
+    String url;
+    String username;
+    String password;
 
-    public OrangeHRM_Loginpage(WebDriver driver) {
+    public OrangeHRM_LoginPage2(WebDriver driver) throws IOException {
 
         this.driver = driver;
-
         PageFactory.initElements(driver, this);
+
+        FileInputStream fis =new FileInputStream("./src/test/resources/DDt/common_data.properties");
+
+        Properties p1 = new Properties();
+        p1.load(fis);
+
+        this.url = p1.getProperty("url");
+        this.username = p1.getProperty("username");
+        this.password = p1.getProperty("password");
     }
 
-    @FindBy(name = "username")
-    private WebElement UserName;
+    // Locate username field
+    @FindBy(xpath = "//input[@name='username']")
+    private WebElement un;
 
-    @FindBy(name = "password")
-    private WebElement Password;
+    // Locate password field
+    @FindBy(xpath = "//input[@name='password']")
+    private WebElement pwd;
 
+    // Locate login button
     @FindBy(xpath = "//button[@type='submit']")
-    private WebElement Loginbtn;
+    private WebElement lgbutton;
 
-    public void getUserName(String value) {
-
-        UserName.sendKeys(value);
+    // Click login button
+    public void getLgbutton() {
+        lgbutton.click();
     }
 
-    public void getPassword(String value) {
-
-        Password.sendKeys(value);
+    // Enter username
+    public void getUn() {
+        un.sendKeys(username);
     }
 
-    public void getLoginbtn() {
+    // Enter password
+    public void getPwd() {
+        pwd.sendKeys(password);
+    }
 
-        Loginbtn.click();
+    // Return application URL
+    public String getUrl() {
+        return url;
     }
 }
