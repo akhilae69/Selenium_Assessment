@@ -1,0 +1,42 @@
+package final_Advance;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import Orange_HRM.BaseClass;
+import Orange_HRM.Buzzpage;
+import Orange_HRM.homepage;
+
+public class Final_Assessment extends BaseClass{
+
+		@Test
+		public void orangeHRM() throws InterruptedException, IOException {
+		
+			Thread.sleep(2000);
+			homepage h = new homepage(driver);
+			//click buzz link
+			h.getBuzzlink();
+			Thread.sleep(2000);
+					
+			Buzzpage b = new Buzzpage(driver);
+			//pass the text to post
+			b.getTextfield();
+			Thread.sleep(3000);
+			//click on post
+			b.getPostbtn();
+			System.out.println("posted");
+			Thread.sleep(4000);
+			//verify it is posted or not
+			System.out.println(b.getVerify());
+			Assert.assertTrue(b.getVerify());
+			System.out.println("posted and verified");
+	}
+}
